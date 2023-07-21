@@ -1,6 +1,5 @@
 from rest_framework import serializers
-from AdminUser.models import User
-from QuizApp.models import Quiz, Question, Answer,UserResponse,UserQuizScore
+from QuizApp.models import Quiz, Question, Answer,UserResponse
 from AdminUser.serializers import UserSerializer
 
 
@@ -64,6 +63,8 @@ class QuizTakingSerializer(serializers.ModelSerializer):
         model = Quiz
         fields = ['title','questions']
 
+
+
 class QuizResultSerializer(serializers.ModelSerializer):
     class Meta:
         model=UserResponse
@@ -76,61 +77,4 @@ class UserResponseSerializer(serializers.ModelSerializer):
         fields='__all__'
 
 
-class UserQuizScoreSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=UserQuizScore
-        fields='__all__'
 
-
-class QuizAnalyticsSerializer(serializers.ModelSerializer):
-    total_quizzes=serializers.SerializerMethodField()
-    total_quiz_takers=serializers.SerializerMethodField()
-    average_quiz_score=serializers.SerializerMethodField()
-    performance_metrics=serializers.SerializerMethodField()
-    question_statistics=serializers.SerializerMethodField()
-
-    class Meta:
-        model=Quiz
-        fields=['id','title','total_quizzes','total_quiz_takers',
-            'average_quiz_score','pass_percentage','performance_metrics','question_statistics']
-
-        def get_total_quizzes(self,obj):
-            return Quiz.objects.count()
-
-        def get_total_quiz_takers(self,obj):
-            return UserQuizScore.objects.filter(quiz=obj).values('user').distinct().count()
-
-        def get_average_quiz_score(self,obj):
-            quiz_scores=UserQuizScore.objects.filter(quiz=obj)
-            total_scores=quiz_scores.count()
-            if total_scores==0:
-                return 0
-            total_score_sum=sum(score.score for score in quiz_scores)
-            return total_score_sum/total_scores
-
-        def get_pass_percentage(self,obj):
-            quiz_scores=UserQuizScore.objects.filter(quiz=obj)
-            total_users=User.objects.count()
-            if total_users==0:
-                return 0
-            pass_count=quiz_scores.filter(score__gte=40).count()
-            return (pass_count/total_users) * 100
-
-        def get_performance_metrics(self,obj):
-            quiz_scores=UserQuizScore.objects.filter(quiz=obj)
-            scores=quiz_scores.values('quiz').annotate(
-                average_score=models.Avg('score'),
-                highest_score=models.Max('score'),
-                lowest_score=models.Min('score'),
-
-            ).values('average_score','highest_score','lowest_score')
-            return scores[0],scores[1] if scores else{
-                'average_score':0,
-                'highest_score':0,
-                'lowest_score':0
-            }
-        def get_question_statistics(self,obj):
-            return{
-                'most_answered_questions':[],
-                'least_answered_questions':[],
-            }

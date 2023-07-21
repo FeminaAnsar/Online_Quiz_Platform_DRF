@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from .models import Question,Quiz,UserResponse,Answer
 from .serializers import (
-    QuizListSerializer,QuizResultSerializer,QuizSerializer,QuizAnalyticsSerializer,QuizTakingSerializer
+    QuizListSerializer,QuizResultSerializer,QuizSerializer,QuizTakingSerializer
 )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -91,7 +91,6 @@ class QuizListView(generics.ListAPIView):
 
 class QuizAnalyticsView(APIView):
     queryset = Quiz.objects.all()
-    serializer_class = QuizAnalyticsSerializer
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
@@ -141,34 +140,11 @@ class QuizAnalyticsView(APIView):
 
         return Response(
             {
-            'Quiz_Overview': Quiz_Overview,
-            'Performance_Metrics': Performance_Metrics,
-            'Question_Statistics': Question_Statistics,
-            'percentage_of_users_passed': percentage
+                'Quiz_Overview': Quiz_Overview,
+                'Performance_Metrics': Performance_Metrics,
+                'Question_Statistics': Question_Statistics,
+                'percentage_of_users_passed': percentage
         }
-        )
-
-'''class PerformanceMetricsView(generics.RetrieveAPIView):
-    queryset = Quiz.objects.all()
-    serializer_class = QuizAnalyticsSerializer
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
-
-    def get_serializer_context(self):
-        context=super().get_serializer_context()
-        context['performance_metrics']=True
-        return context
-
-
-class QuestionStatisticsView(generics.RetrieveAPIView):
-    queryset=Quiz.objects.all()
-    serializer_class = QuizAnalyticsSerializer
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
-
-    def get_serializer_context(self):
-        context=super().get_serializer_context()
-        context['question_statistics']=True
-        return context'''
+     )
 
 # Create your views here.
