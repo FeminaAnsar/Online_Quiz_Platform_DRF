@@ -11,7 +11,7 @@ from AdminUser.models import User
 from AdminUser.pagination import CustomPagination
 from django.db.models import Avg,Max,Min,Count
 from rest_framework.views import APIView
-
+from django.db import models
 
 class QuizListCreateView(generics.CreateAPIView):
     queryset=Quiz.objects.all()
@@ -49,19 +49,19 @@ class UserQuizTakingView(APIView):
 
             for question in questions:
                 question_id = question.id
-                selected_choice_id = request.data.get(str(question_id), None)
-                if selected_choice_id is not None:
+                selected_choices_id = request.data.get(str(question_id), None)
+                if selected_choices_id is not None:
                     try:
-                        selected_choice = Answer.objects.get(pk=selected_choice_id)
+                        selected_choices = Answer.objects.get(pk=selected_choices_id)
                     except Answer.DoesNotExist:
                         return Response({"error": "Selected answer not found"})
 
-                    if selected_choice.is_correct:
+                    if selected_choices.is_correct:
                         correct_answers += 1
 
             score = (correct_answers / total_questions) * 100
             UserResponse.objects.create(user=request.user, quiz=quiz, score=score)
-            return Response({"You are scored ": score})
+            return Response({"Your score ": score})
 
         except Quiz.DoesNotExist:
             return Response({"error": "Quiz not found."})
@@ -86,7 +86,7 @@ class QuizListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
     filter_backends = [DjangoFilterBackend]
-    filterset_fields=['topic','difficulty_level','created_at']
+    filterset_fields=['topic','difficulty_level','date_created']
 
 
 class QuizAnalyticsView(APIView):

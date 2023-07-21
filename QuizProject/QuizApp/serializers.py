@@ -14,11 +14,11 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ['id','question_test','answers']
+        fields = ['id','question_text','answers']
 
 
 class QuizSerializer(serializers.ModelSerializer):
-    questions = QuestionSerializer(many=True)
+    questions = QuestionSerializer(many=True,read_only=True)
     creator=UserSerializer(read_only=True)
 
     class Meta:
@@ -44,7 +44,7 @@ class QuizListSerializer(serializers.ModelSerializer):
 
 class QuizAnswerSerializer(serializers.ModelSerializer):
     class Meta:
-        model=Quiz
+        model=Answer
         fields=['id','choice','answer_text']
 
 

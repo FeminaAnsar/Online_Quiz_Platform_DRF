@@ -13,8 +13,7 @@ class Quiz(models.Model):
     difficulty_level= models.CharField(max_length=10,choices=DIFFICULTY_CHOICES,default='easy')
     date_created=models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.title
+''' 
 
     def calculate_average_score(self):
         quiz_scores=UserQuizScore.objects.filter(quiz=self)
@@ -30,15 +29,12 @@ class Quiz(models.Model):
         if total_users==0:
             return 0
         pass_count=quiz_scores.filter(score__gte=self.passing_score).count()
-        return(pass_count/total_users)*100
+        return(pass_count/total_users)*100'''
 
 
 class Question(models.Model):
-    quiz=models.ForeignKey(Quiz,on_delete=models.CASCADE)
+    quiz=models.ForeignKey(Quiz,on_delete=models.CASCADE,related_name='questions')
     question_text=models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.text
 
 
 class Answer(models.Model):
@@ -48,7 +44,7 @@ class Answer(models.Model):
         ('c','Option C'),
         ('d','Option D')
     ]
-    question=models.ForeignKey(Question,on_delete=models.CASCADE)
+    question=models.ForeignKey(Question,on_delete=models.CASCADE,related_name='answers')
     answer_text=models.CharField(max_length=255)
     choice=models.CharField(max_length=1,choices=CHOICES)
     is_correct=models.BooleanField(default=False)

@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from AdminUser.pagination import CustomPagination
 from django.contrib.auth import logout
+from django.db import models
 
 
 class RegisterView(APIView):
@@ -36,7 +37,6 @@ class UserListCreateView(generics.CreateAPIView):
     def post(self,request,*args,**kwargs):
         response=super().post(request,*args,**kwargs)
         return Response({"message":"Created New User",'status':200})
-
 
 
 class UserListView(generics.ListAPIView):
@@ -81,8 +81,8 @@ class UserProfileView(APIView):
         quiz_queryset=Quiz.objects.filter(creator=request.user)
         quiz_serializer=QuizListSerializer(quiz_queryset,many=True)
         response_data={
-            "username":user_serializer.data["username"],
-            "email":user_serializer.data["email"],
+            "username":user_serializer.data['username'],
+            "email":user_serializer.data['email'],
             "quizzes_created":quiz_serializer.data
         }
         return Response(response_data)
