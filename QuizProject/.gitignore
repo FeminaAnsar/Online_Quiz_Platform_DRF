@@ -1,0 +1,44 @@
+# Django project files
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+*.swp
+
+# Development and runtime files
+*.env
+*.log
+*.sqlite3
+*.pyc
+*.pyo
+*.pyd
+*.swp
+*.swo
+*.bak
+
+# Static and media files
+/static/
+/media/
+
+# Virtual environment
+/.venv/
+/venv/
+/env/
+
+# Dependency management
+/.venv/
+/pip-selfcheck.json
+/requirements.txt
+/requirements-dev.txt
+/.pipenv/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.sublime-*
+*.pycharm-*
+*.pydevproject
+
+# System and editor files
+.DS_Store
+Thumbs.db
