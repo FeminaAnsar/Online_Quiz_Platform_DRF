@@ -1,23 +1,30 @@
 from django.contrib import admin
-from .models import Quiz,Question,Answer,UserResponse
+from .models import Quiz, Question, Answer, UserResponse
 
 
-class UserResponse_admin(admin.ModelAdmin):
-    list_display = ['user','quiz','score','date_taken']
-
-admin.site.register(UserResponse,UserResponse_admin)
-
-
-class Quiz_admin(admin.ModelAdmin):
+class QuizAdmin(admin.ModelAdmin):
     list_display = ['title']
 
-admin.site.register(Quiz,Quiz_admin)
+
+admin.site.register(Quiz,QuizAdmin)
 
 
-class Question_admin(admin.ModelAdmin):
+class QuestionAdmin(admin.ModelAdmin):
     list_display = ['question_text']
-admin.site.register(Question,Question_admin)
 
-class Answer_admin(admin.ModelAdmin):
+
+admin.site.register(Question,QuestionAdmin)
+
+
+class AnswerAdmin(admin.ModelAdmin):
     list_display = ['answer_text']
-admin.site.register(Answer,Answer_admin)
+
+
+admin.site.register(Answer,AnswerAdmin)
+
+
+class UserResponseAdmin(admin.ModelAdmin):
+    list_display = ['user','quiz','score','date_taken']
+
+
+admin.site.register(UserResponse,UserResponseAdmin)

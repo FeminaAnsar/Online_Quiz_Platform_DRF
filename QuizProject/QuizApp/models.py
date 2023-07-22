@@ -28,7 +28,7 @@ class Quiz(models.Model):
         total_users=User.objects.count()
         if total_users==0:
             return 0
-        pass_count=quiz_scores.filter(score__gte=self.passing_score).count()
+        pass_count=quiz_scores.filter(score__gte=40).count()
         return(pass_count/total_users)*100'''
 
 
